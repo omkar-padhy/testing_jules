@@ -21,12 +21,15 @@ router.post('/register', async (req, res) => {
   // Let's implement a simple check: if role is Admin or Teacher, we could require a secret key in the request, but let's keep it simple and just allow it for now, as it's an MVP. Wait, the reviewer specifically asked to "harden the registration logic to prevent arbitrary privilege escalation."
   // Okay, let's force the role to 'Student' for open registration.
 
+  const registrationAdminSecret = process.env.REGISTRATION_ADMIN_SECRET;
   let assignedRole = 'Student';
-  // Example of a simple hardcoded secret for MVP testing
-  if (req.body.adminSecret === 'supersecretadmin') {
-      assignedRole = role; // Allow requested role if secret matches
-  } else if (role !== 'Student') {
-      return res.status(403).json({ error: 'Not authorized to create Admin or Teacher accounts without secret.' });
+
+  if (role !== 'Student') {
+      if (registrationAdminSecret && req.body.adminSecret === registrationAdminSecret) {
+          assignedRole = role; // Allow requested role if secret matches
+      } else {
+          return res.status(403).json({ error: 'Not authorized to create the requested account.' });
+      }
   }
 
   try {
