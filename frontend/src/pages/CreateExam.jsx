@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
-import axios from 'axios';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext, api } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const CreateExam = () => {
@@ -29,7 +28,7 @@ const CreateExam = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/exams',
+      await api.post('/api/exams',
         { title, description, questions },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import axios from 'axios';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext, api } from '../context/AuthContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import * as tf from '@tensorflow/tfjs';
 import * as blazeface from '@tensorflow-models/blazeface';
@@ -18,7 +17,7 @@ const TakeExam = () => {
   useEffect(() => {
     const fetchExam = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/exams/${id}`, {
+        const res = await api.get(`/api/exams/${id}`, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
         setExam(res.data);
@@ -89,7 +88,7 @@ const TakeExam = () => {
     }
 
     try {
-      const res = await axios.post(`http://localhost:5000/api/exams/${id}/submit`,
+      const res = await api.post(`/api/exams/${id}/submit`,
         { answers },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );

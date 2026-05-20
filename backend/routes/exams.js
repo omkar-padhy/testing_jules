@@ -86,6 +86,11 @@ router.post('/:id/submit', authorize(['Student']), async (req, res) => {
   const { id } = req.params;
   const { answers } = req.body; // { questionId: selectedOptionIndex }
 
+  // FIX: Validating payload so that answers must be a non-null object to prevent runtime errors
+  if (!answers || typeof answers !== 'object' || Array.isArray(answers)) {
+    return res.status(400).json({ error: 'Invalid answers format.' });
+  }
+
   try {
     const questionsResult = await pool.query('SELECT * FROM questions WHERE exam_id = $1', [id]);
     const questions = questionsResult.rows;

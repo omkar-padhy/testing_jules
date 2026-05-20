@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
+import { AuthContext, api } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
@@ -16,7 +15,7 @@ const Dashboard = () => {
 
     const fetchExams = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/exams', {
+        const res = await api.get('/api/exams', {
           headers: { Authorization: `Bearer ${user.token}` }
         });
         setExams(res.data);
